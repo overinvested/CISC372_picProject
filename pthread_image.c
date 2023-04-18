@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <time.h>
+#include <sys/time.h>
 #include <string.h>
 #include "pthread_image.h"
 #include <pthread.h>
@@ -130,8 +131,8 @@ enum KernelTypes GetKernelType(char* type){
 //main:
 //argv is expected to take 2 arguments.  First is the source file name (can be jpg, png, bmp, tga).  Second is the lower case name of the algorithm.
 int main(int argc,char** argv){
-    long t1,t2,t3,t4;
-    t1=time(NULL);
+    struct timeval t1,t2,t3,t4;
+    gettimeofday(&t1, NULL);
 
     stbi_set_flip_vertically_on_load(0); 
     if (argc!=3) return Usage();
@@ -165,7 +166,7 @@ int main(int argc,char** argv){
     //     }
     // }
 
-    t3=time(NULL);
+    gettimeofday(&t3, NULL);
 
     for (int thread = 0; thread < thread_count; thread++)
     {
@@ -181,15 +182,16 @@ int main(int argc,char** argv){
         pthread_join(thread_handles[thread], NULL);
     }
 
-    t4=time(NULL);
-    printf("Took %ld seconds to process image\n", t4-t3);
+    gettimeofday(&t4, NULL);
+    printf("Took %1.6f seconds to process image\n", (t4.tv_sec - t3.tv_sec + (t4.tv_usec - t3.tv_usec) / 1000000.0));
 
+    free(arguments);
     free(thread_handles);
     stbi_write_png("output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
     stbi_image_free(srcImage.data);
     
     free(destImage.data);
-    t2=time(NULL);
-    printf("Took %ld seconds (including compression, encoding, file write, etc.)\n",t2-t1);
+    gettimeofday(&t2, NULL);
+    printf("Took %1.6f seconds (including compression, encoding, file write, etc.)\n", (t2.tv_sec - t1.tv_sec + (t2.tv_usec - t1.tv_usec) / 1000000.0));
    return 0;
 }
