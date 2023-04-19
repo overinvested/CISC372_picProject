@@ -1,0 +1,21 @@
+Script started on Wed 19 Apr 2023 06:07:37 PM EDT
+]0;gluck@login01.darwin:~/CISC372_picProject[?1034h[(ea-cisc372:gluck)@login01.darwin CISC372_picProject]$ salloc --ntasks=1 --cpus-per-task=16 --partition=standard
+salloc: Granted job allocation 3985374
+salloc: Waiting for resource configuration
+salloc: Nodes r1n00 are ready for job
+]0;gluck@r1n00.darwin:~/CISC372_picProject[?1034h[gluck@r1n00 CISC372_picProject]$ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+]0;gluck@r1n00.darwin:~/CISC372_picProject[gluck@r1n00 CISC372_picProject]$ srun ./omp_image pic1.jpg edge
+Took 0.138018 seconds to process image
+Took 6.223191 seconds (including compression, encoding, file write, etc.)
+]0;gluck@r1n00.darwin:~/CISC372_picProject[gluck@r1n00 CISC372_picProject]$ mv output.png omp_output.png
+]0;gluck@r1n00.darwin:~/CISC372_picProject[gluck@r1n00 CISC372_picProject]$ srun ./pthread_image pic1.jpg edge
+Took 0.123195 seconds to process image
+Took 6.222135 seconds (including compression, encoding, file write, etc.)
+]0;gluck@r1n00.darwin:~/CISC372_picProject[gluck@r1n00 CISC372_picProject]$ mv output.png pthread_output.png
+]0;gluck@r1n00.darwin:~/CISC372_picProject[gluck@r1n00 CISC372_picProject]$ exit
+logout
+salloc: Relinquishing job allocation 3985374
+]0;gluck@login01.darwin:~/CISC372_picProject[(ea-cisc372:gluck)@login01.darwin CISC372_picProject]$ exit
+exit
+
+Script done on Wed 19 Apr 2023 06:08:52 PM EDT
